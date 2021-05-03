@@ -104,7 +104,7 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
   deploy-2:
-    if: github.ref == 'refs/heads/release'
+    #if: github.ref == 'refs/heads/release'
     needs: [ fortify-analysis, fortify-scan ]
     runs-on: ubuntu-latest
     steps:
