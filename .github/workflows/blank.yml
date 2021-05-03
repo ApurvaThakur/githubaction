@@ -85,7 +85,6 @@ jobs:
           echo test, and deploy your project.
        # exit 1
   test-2:
-  
     if: github.base_ref == 'release' || github.ref == 'refs/heads/release'
     needs: fortify-analysis
     runs-on: ubuntu-latest
