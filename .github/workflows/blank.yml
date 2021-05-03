@@ -95,7 +95,7 @@ jobs:
           echo test, and deploy your project.
   deploy:
     if: github.ref == 'refs/heads/main'
-    needs: [ fortify-analysis ,fortify-scan ]
+    needs: [ fortify-analysis ,fortify-scan ,test ]
     runs-on: ubuntu-latest
     steps:
       # Runs a set of commands using the runners shell
@@ -105,7 +105,7 @@ jobs:
           echo test, and deploy your project.
   deploy-2:
     if: github.ref == 'refs/heads/release'
-    needs: [ fortify-analysis , fortify-scan ]
+    needs: [ fortify-analysis, fortify-scan ]
     runs-on: ubuntu-latest
     steps:
       # Runs a set of commands using the runners shell
