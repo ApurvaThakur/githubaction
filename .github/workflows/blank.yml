@@ -94,7 +94,7 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
   deploy:
-    if: success()
+    #if: success()
     needs: [ fortify-analysis , test ]
     runs-on: ubuntu-latest
     steps:
@@ -104,7 +104,7 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
   deploy-2:
-    if: success()
+    #if: success()
     needs: [ fortify-analysis , test-2 ]
     runs-on: ubuntu-latest
     steps:
