@@ -48,7 +48,7 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
   deploy:
-    needs: [ build , test-2 ]
+    needs: [ build , test ]
     runs-on: ubuntu-latest
     steps:
       # Runs a set of commands using the runners shell
