@@ -39,15 +39,14 @@ jobs:
     if: github.ref == 'refs/heads/release'  || github.base_ref == 'release'
     name: Unit Test Only -UAT
     runs-on: ubuntu-latest
-    environment: 
-      name: non-prod
+  
     steps:
       - run: echo "Ref :$GITHUB_REF"
       - run: echo "$GITHUB_BASE_REF"
       - name: checkout
         uses: actions/checkout@v2
       
-      - run: cd target && ls
+    
     
        
 
