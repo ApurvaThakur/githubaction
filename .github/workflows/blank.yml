@@ -102,7 +102,7 @@ jobs:
     - name: Run PowerShell Get Critical/High Count script
       run: |
         ls
-        echo "${{ secrets.TEST }}
+        echo "${{ secrets.TEST }}"
       
           
     
