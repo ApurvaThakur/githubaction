@@ -33,7 +33,7 @@ jobs:
       - name: Run a one-line script
         run: echo Hello, worldd
   test:
-    if: github.base_ref == 'main' || github.ref == 'refs/heads/main'
+    if: github.base_ref == 'refs/heads/main' || github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -45,7 +45,7 @@ jobs:
        # exit 1
   test-2:
   
-    if: github.base_ref == 'release' || github.ref == 'refs/heads/release'
+    if: github.base_ref == 'refs/heads/release' || github.ref == 'refs/heads/release'
     needs: build
     runs-on: ubuntu-latest
     steps:
