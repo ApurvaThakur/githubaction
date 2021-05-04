@@ -1,116 +1,176 @@
-# This is a basic workflow to help you get started with Actions
+name: github-actions-java
 
-name: CI
-
-# Controls when the action will run. 
-on:
-  # Triggers the workflow on push or pull request events but only for the main branch
+on: 
   push:
     branches: 
-    - main
-    - release
+      - main
+      - release
+       
   pull_request:
-    branches: 
-    - main
-    - master
-    - release
-
+    branches:
+      - main
+      - release
  
- 
+env:
+  REGION: ap-east-1 
+  
+  JAVA_VERSION: '1.8'
+  
+  
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    if: github.base_ref == 'main' || github.ref == 'refs/heads/main'
+  
+
+  UnitTest: 
+    if: github.ref == 'refs/heads/main'  || github.base_ref == 'main'
+    name: Unit Test Only-test
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    environment: 
+      name: test
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
+      - run: echo "Ref :$GITHUB_REF"
+      - run: echo "$GITHUB_BASE_REF"
+      - run: echo "$GITHUB_HEAD_REF"
+      - name: checkout
+        uses: actions/checkout@v2
+      
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, worldd
-  build-2:
-    if: github.base_ref == 'release' || github.ref == 'refs/heads/release'
+     
+  UnitTest-UAT:
+    if: github.ref == 'refs/heads/release'  || github.base_ref == 'release'
+    name: Unit Test Only -UAT
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    environment: 
+      name: non-prod
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, worldd
-
-  fortify-scan:
-    if: github.base_ref == 'release' || github.ref == 'refs/heads/release' || github.base_ref == 'main' || github.ref == 'refs/heads/main' && always()
-    needs: [ build , build-2 ]
-    runs-on: ubuntu-latest
-    steps:
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-  fortify-analysis:
-    if: always()
-    needs: fortify-scan
-    runs-on: ubuntu-latest
-    steps:
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-  test:
+      - run: echo "Ref :$GITHUB_REF"
+      - run: echo "$GITHUB_BASE_REF"
+      - name: checkout
+        uses: actions/checkout@v2
+      
+      - run: cd target && ls
     
-    if:  github.ref == 'refs/heads/main' && success()
-    needs: fortify-analysis
+       
+
+  
+  Build-Test:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && success()
+    needs: UnitTest
+    name: Build-Test
     runs-on: ubuntu-latest
+    environment: 
+      name: test
     steps:
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-       # exit 1
-  test-2:
-    if: github.ref == 'refs/heads/release' && success()
-    needs: fortify-analysis
+      - name: checkout
+        uses: actions/checkout@v2
+     
+      - run: pwd
+      - run: cd target && ls -la
+      - run: tree
+  
+
+  Build-UAT:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/release' && success()
+    needs: UnitTest-UAT
+    name: Build-UAT
     runs-on: ubuntu-latest
+    environment: 
+      name: non-prod
+    
     steps:
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-  deploy:
-    if: github.ref == 'refs/heads/main' && success()
-    needs: test 
+      - name: checkout
+        uses: actions/checkout@v2
+     
+      - run: pwd
+      - run: cd target && ls -la
+      - run: tree
+  
+            
+            
+  Fortify-SAST:
+    if: github.ref == 'refs/heads/release' || github.ref == 'refs/heads/main' || github.base_ref == 'main' || github.base_ref == 'release' && always()
+    needs: [ Build-Test, Build-UAT ]
     runs-on: ubuntu-latest
+     
+    outputs:
+        output1: ${{ env.JOB_TOKEN }} # try outputting job token to use in additional jobs
+     
     steps:
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-  deploy-2:
-    if: github.ref == 'refs/heads/release' && success()
-    needs: test-2
+    - uses: actions/checkout@v1
+    - name: Run PowerShell Get Critical/High Count script
+      run: |
+        ls
+          
+    
+  # job to get count of Critical/High vulnerabilities associated with this repo
+  get-fortify-vulnerabilities:
+    if: always()
+    needs: Fortify-SAST # this setting makes this job dependent on build completing successfully
+ 
     runs-on: ubuntu-latest
+     
     steps:
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+    - uses: actions/checkout@v1
+    - name: Run PowerShell Get Critical/High Count script
+      run: |
+        ls
+  PublishPackage:
+    needs: get-fortify-vulnerabilities
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && success()
+    steps:
+      - uses: actions/checkout@v2
+
+    
+      
+      - name: deploy Code to lambda functions
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          echo "hello"   
+  DeployArtifacts:
+    needs: PublishPackage
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && success()
+    runs-on: ubuntu-latest
+  
+ 
+    steps:
+      - uses: actions/checkout@v2
+
+    
+      
+      - name: deploy Code to lambda functions
+        run: |
+          echo "hello"
+
+      
+      
+
+  DeployArtifacts-Test:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/release' && success()
+    needs: get-fortify-vulnerabilities
+    runs-on: ubuntu-latest
+    environment: test
+    steps:
+    - uses: actions/checkout@v2
+    - run: echo "this job is not completed yet" 
+ 
+  IntegrationTest:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/release' || github.ref == 'refs/heads/main' && always()
+    needs: [ DeployArtifacts-Test,DeployArtifacts ]
+    name: IntegrationTest
+    runs-on: ubuntu-latest
+   
+    
+    steps:
+    - uses: actions/checkout@v2
+    - run: echo "this job is not completed yet" 
+ 
+   
+    
+  LoadTest:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/release' || github.ref == 'refs/heads/main' || && success()
+    needs: IntegrationTest
+    name: Run Load Test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Load test status - Jmeter
+      run: echo "This Job would get updated soon"
