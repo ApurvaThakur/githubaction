@@ -44,7 +44,7 @@ jobs:
     environment: TEST
     
     steps:
-      - run: echo "${{ secrets.TEST }}
+      - run: echo "${{ secrets.TEST }} "
       - run: echo "Ref :$GITHUB_REF"
       - run: echo "$GITHUB_BASE_REF"
       - name: checkout
