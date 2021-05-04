@@ -72,8 +72,7 @@ jobs:
     needs: UnitTest-UAT
     name: Build-UAT
     runs-on: ubuntu-latest
-    environment: 
-      name: non-prod
+  
     
     steps:
       - name: checkout
