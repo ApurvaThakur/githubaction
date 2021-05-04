@@ -1,15 +1,16 @@
 name: github-actions-java
 
-on: 
+ 
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: 
-      - main
-      - release
-       
+    - main
   pull_request:
-    branches:
-      - main
-      - release
+    branches: 
+    - main
+    - master
+    - release
  
 env:
   REGION: ap-east-1 
