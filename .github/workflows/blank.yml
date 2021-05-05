@@ -7,6 +7,7 @@ on:
       myenv:
         description: 'the env to run on'
         default: 'dev'
+        #: 'test'
         required: true
   push:
     branches:
@@ -17,7 +18,7 @@ on:
 jobs:
   some_job:
     environment:
-      name: ${{ github.event.inputs.myenv }}
+      name: ${{ github.event.inputs.myenv.default }}
     runs-on: ubuntu-20.04
     name: some job
     steps:
