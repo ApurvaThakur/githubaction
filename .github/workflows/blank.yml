@@ -85,8 +85,8 @@ jobs:
             
             
   Fortify-SAST:
-    if: github.ref == 'refs/heads/release' || github.ref == 'refs/heads/main' || github.base_ref == 'main' || github.base_ref == 'release' && always()
-    needs: [ Build-Test, Build-UAT ]
+    if: github.ref == 'refs/heads/release' || github.ref == 'refs/heads/main' || github.base_ref == 'main' || github.base_ref == 'release' 
+    needs: Build-UAT
     runs-on: ubuntu-latest
      
     outputs:
