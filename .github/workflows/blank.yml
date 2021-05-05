@@ -21,7 +21,8 @@ jobs:
     strategy:
       matrix:
         environment: ['non-prod','test']
-        github.ref: ['refs/heads/release', 'refs/heads/main']
+        githubbranch: [1]
+        github.ref: ['$GITHUB_REF']
         exclude:
         - environment: 'non-prod'
           github.ref: 'refs/heads/release'
