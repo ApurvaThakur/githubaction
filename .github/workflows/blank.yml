@@ -48,8 +48,8 @@ jobs:
       
 
   Build-UAT:
-    if: github.event_name != 'pull_request' && always()
-    needs: [ UnitTest-UAT, UnitTest]
+    if: github.event_name != 'pull_request' && ( needs.UnitTest-UAT.result == 'success' || github.ref == 'refs/heads/release' ) || ( needs.UnitTest.result == 'success' || github.ref == 'refs/heads/main' )
+   # needs: [ UnitTest-UAT, UnitTest]
     name: Build-UAT
     runs-on: ubuntu-latest
     steps:
@@ -59,7 +59,7 @@ jobs:
       - run: tree
 
   Fortify-SAST:
-    if: always()
+  
     needs: Build-UAT
     runs-on: ubuntu-latest
      
@@ -89,7 +89,7 @@ jobs:
       
 
   DeployArtifacts-Test:
-    if: needs.Fortifyanalysis.result == 'success' && always()
+    if: needs.Fortifyanalysis.result == 'success' 
     needs: Fortifyanalysis
     runs-on: ubuntu-latest
    # environment: TEST
