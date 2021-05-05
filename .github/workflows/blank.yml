@@ -30,7 +30,7 @@ jobs:
     name: Unit Test Only-test
     runs-on: ubuntu-latest
     environment: 
-      name: ${{ github.event.inputs.myenv }}
+      name: ${{ github.event.inputs.myenv.default }}
     steps:
       - run: echo "Ref :$GITHUB_REF"
       - run: echo "$GITHUB_BASE_REF"
@@ -48,7 +48,8 @@ jobs:
     if: github.ref == 'refs/heads/release'  || github.base_ref == 'release'
     name: Unit Test Only -UAT
     runs-on: ubuntu-latest
-  
+    environment: 
+      name: ${{ github.event.inputs.myenv.default }}
     steps:
       - run: echo "Ref :$GITHUB_REF"
       - run: echo "$GITHUB_BASE_REF"
@@ -59,7 +60,7 @@ jobs:
           SUPER_SECRET: ${{ secrets.AWS_KEY }}
         run: |
           echo "variable: $SUPER_SECRET"
-      - run: echo "${{ github.event.inputs.myenv }}"
+      - run: echo "${{ github.event.inputs.myenv.default }}"
       
   Build-UAT:
     if: github.event_name != 'pull_request' && ( needs.UnitTest-UAT.result == 'success' || github.ref == 'refs/heads/release' ) || ( needs.UnitTest.result == 'success' || github.ref == 'refs/heads/main' )
