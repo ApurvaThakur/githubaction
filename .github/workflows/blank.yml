@@ -20,9 +20,12 @@ jobs:
     strategy:
       matrix:
         environment: ['non-prod','test']
+        github.ref: ['refs/heads/release', 'refs/heads/main']
         exclude:
         - environment: 'non-prod'
-          github.ref: refs/heads/release
+          github.ref: 'refs/heads/release'
+        - environment: 'test'
+          github.ref: 'refs/heads/main'
           
     environment:
       name: ${{ matrix.environment }}
