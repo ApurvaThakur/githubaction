@@ -111,33 +111,7 @@ jobs:
     - name: Run PowerShell Get Critical/High Count script
       run: |
         ls
-  PublishPackage:
-    needs: get-fortify-vulnerabilities
-    runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && success()
-    steps:
-      - uses: actions/checkout@v2
-
-    
-      
-      - name: deploy Code to lambda functions
-        run: |
-          echo "hello"   
-  DeployArtifacts:
-    needs: PublishPackage
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && success()
-    runs-on: ubuntu-latest
-  
  
-    steps:
-      - uses: actions/checkout@v2
-
-    
-      
-      - name: deploy Code to lambda functions
-        run: |
-          echo "hello"
-      
       
 
   DeployArtifacts-Test:
