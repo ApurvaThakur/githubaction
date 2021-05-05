@@ -1,5 +1,6 @@
 name: github-actions-java
 
+
 on:
   workflow_dispatch:
     inputs:
@@ -8,61 +9,23 @@ on:
         default: 'dev'
         required: true
   push:
-    branches: 
-      - main
-      - release
-       
-  pull_request:
     branches:
-      - main
-      - release
- 
-env:
-  REGION: ap-east-1 
-  
-  JAVA_VERSION: '1.8'
-  
-  
+    - main
+    - release
+    
+
 jobs:
-  
-
-  UnitTest: 
-    if: github.ref == 'refs/heads/main'  || github.base_ref == 'main'
-    name: Unit Test Only-test
-    runs-on: ubuntu-latest
-    environment: 
-     name: ${{ github.event.inputs.myenv }}
-    steps:
-      - run: echo "Ref :$GITHUB_REF"
-      - run: echo "$GITHUB_BASE_REF"
-      - name: bash
-        env:
-          SUPER_SECRET: ${{ secrets.TEST }}
-        run: |
-          echo "$SUPER_SECRET"
-      - name: checkout
-        uses: actions/checkout@v2
-      
-
-     
-  UnitTest-UAT:
-    if: github.ref == 'refs/heads/release'  || github.base_ref == 'release'
-    name: Unit Test Only -UAT
-    runs-on: ubuntu-latest
-    environment: 
+  some_job:
+    environment:
       name: ${{ github.event.inputs.myenv }}
+    runs-on: ubuntu-20.04
+    name: some job
     steps:
-      - run: echo "Ref :$GITHUB_REF"
-      - run: echo "$GITHUB_BASE_REF"
-      - name: checkout
-        uses: actions/checkout@v2
-      - name: bash
-        env:
-          SUPER_SECRET: ${{ secrets.AWS_KEY }}
+      - name: say hi
+        run: echo hi
+      - name: show env
         run: |
-          echo "variable: $SUPER_SECRET"
-      - run: echo "${{ github.event.inputs.myenv.default }}"
-      
+          echo "${{ github.event.inputs.myenv }}"
   Build-UAT:
     if: github.event_name != 'pull_request' && ( needs.UnitTest-UAT.result == 'success' || github.ref == 'refs/heads/release' ) || ( needs.UnitTest.result == 'success' || github.ref == 'refs/heads/main' )
     needs: [ UnitTest-UAT, UnitTest]
