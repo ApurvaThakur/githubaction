@@ -100,7 +100,7 @@ jobs:
           
     
   # job to get count of Critical/High vulnerabilities associated with this repo
-  get-fortify-vulnerabilities:
+  Fortifyanalysis:
     if: always()
     needs: Fortify-SAST # this setting makes this job dependent on build completing successfully
  
@@ -115,8 +115,8 @@ jobs:
       
 
   DeployArtifacts-Test:
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/release' && success()
-    needs: get-fortify-vulnerabilities
+    #if: github.event_name != 'pull_request' && github.ref == 'refs/heads/release' && success()
+    needs: Fortifyanalysis
     runs-on: ubuntu-latest
     environment: test
     steps:
