@@ -46,44 +46,18 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
       
-    
-    
-       
-
-  
-  Build-Test:
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && success()
-    needs: UnitTest
-    name: Build-Test
-    runs-on: ubuntu-latest
-    environment: 
-      name: test
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-     
-      - run: pwd
-    
-      - run: tree
-  
 
   Build-UAT:
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/release' && success()
-    needs: UnitTest-UAT
+    if: github.event_name != 'pull_request' && always()
+    needs: [ UnitTest-UAT, UnitTest]
     name: Build-UAT
     runs-on: ubuntu-latest
-  
-    
     steps:
       - name: checkout
         uses: actions/checkout@v2
-     
       - run: pwd
-    
       - run: tree
-  
-            
-            
+
   Fortify-SAST:
     if: github.ref == 'refs/heads/release' || github.ref == 'refs/heads/main' || github.base_ref == 'main' || github.base_ref == 'release' 
     needs: Build-UAT
