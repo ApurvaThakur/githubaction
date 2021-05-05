@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         environment: ['non-prod','test']
-        githubbranch: [1]
+        #githubbranch: [1]
         github.ref: ['$GITHUB_REF']
         exclude:
         - environment: 'non-prod'
@@ -37,8 +37,13 @@ jobs:
       - name: say hi
         run: echo hi
       - name: show env
-        run: |
-          echo "${{ github.event.inputs.myenv }}"
+        env:  
+          name: ${{ secrets.TEST }}"
+        run: echo "Name:$name"
+      - name: show env
+        env:  
+          name: ${{ secrets.AWS_KEY }}"
+        run: echo "Name:$name"
   Build-UAT:
     if: github.event_name != 'pull_request' && ( needs.UnitTest-UAT.result == 'success' || github.ref == 'refs/heads/release' ) || ( needs.UnitTest.result == 'success' || github.ref == 'refs/heads/main' )
     needs: some_job
