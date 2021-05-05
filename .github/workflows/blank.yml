@@ -59,7 +59,7 @@ jobs:
           SUPER_SECRET: ${{ secrets.AWS_KEY }}
         run: |
           echo "variable: $SUPER_SECRET"
-          echo "${{ github.event.inputs.myenv }}"
+      - run: echo "${{ github.event.inputs.myenv }}"
       
   Build-UAT:
     if: github.event_name != 'pull_request' && ( needs.UnitTest-UAT.result == 'success' || github.ref == 'refs/heads/release' ) || ( needs.UnitTest.result == 'success' || github.ref == 'refs/heads/main' )
