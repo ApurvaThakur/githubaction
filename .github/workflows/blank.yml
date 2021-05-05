@@ -22,7 +22,7 @@ jobs:
       matrix:
         environment: ['non-prod','test']
         #githubbranch: [1]
-        github.ref: ['$GITHUB_REF']
+        github.ref: ['refs/heads/release','main']
         exclude:
         - environment: 'non-prod'
           github.ref: 'refs/heads/release'
