@@ -49,7 +49,7 @@ jobs:
 
   Build-UAT:
     if: github.event_name != 'pull_request' && ( needs.UnitTest-UAT.result == 'success' || github.ref == 'refs/heads/release' ) || ( needs.UnitTest.result == 'success' || github.ref == 'refs/heads/main' )
-   # needs: [ UnitTest-UAT, UnitTest]
+    needs: [ UnitTest-UAT, UnitTest]
     name: Build-UAT
     runs-on: ubuntu-latest
     steps:
