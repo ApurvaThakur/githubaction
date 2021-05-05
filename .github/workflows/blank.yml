@@ -36,14 +36,12 @@ jobs:
     steps:
       - name: say hi
         run: echo hi
-      - name: show env
-        env:  
-          name: ${{ secrets.TEST }}"
-        run: echo "Name:$name"
+  
       - name: show env
         env:  
           name: ${{ secrets.AWS_KEY }}"
         run: echo "Name_key:$name"
+        if: $ {{ matrix.github.ref }} == $GITHUB_REF
   Build-UAT:
     if: github.event_name != 'pull_request' && ( needs.UnitTest-UAT.result == 'success' || github.ref == 'refs/heads/release' ) || ( needs.UnitTest.result == 'success' || github.ref == 'refs/heads/main' )
     needs: some_job
