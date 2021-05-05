@@ -118,7 +118,7 @@ jobs:
     #if: github.event_name != 'pull_request' && github.ref == 'refs/heads/release' && success()
     needs: Fortifyanalysis
     runs-on: ubuntu-latest
-    environment: test
+    environment: TEST
     steps:
     - uses: actions/checkout@v2
     - run: echo "this job is not completed yet" 
