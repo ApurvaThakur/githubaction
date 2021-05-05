@@ -115,7 +115,7 @@ jobs:
       
 
   DeployArtifacts-Test:
-    #if: github.event_name != 'pull_request' && github.ref == 'refs/heads/release' && success()
+    if: needs.Fortifyanalysis.result == 'success'
     needs: Fortifyanalysis
     runs-on: ubuntu-latest
    # environment: TEST
