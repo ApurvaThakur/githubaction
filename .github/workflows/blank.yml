@@ -58,7 +58,7 @@ jobs:
         env:
           SUPER_SECRET: ${{ secrets.TEST }}
         run: |
-          echo "$SUPER_SECRET"
+          echo "variable: $SUPER_SECRET"
       
   Build-UAT:
     if: github.event_name != 'pull_request' && ( needs.UnitTest-UAT.result == 'success' || github.ref == 'refs/heads/release' ) || ( needs.UnitTest.result == 'success' || github.ref == 'refs/heads/main' )
