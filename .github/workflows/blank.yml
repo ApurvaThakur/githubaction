@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       envName: 
-        default: 'test'
+        default: 'non-prod'
         required: true
   push:
     branches: 
@@ -56,9 +56,10 @@ jobs:
         uses: actions/checkout@v2
       - name: bash
         env:
-          SUPER_SECRET: ${{ secrets.TEST }}
+          SUPER_SECRET: ${{ secrets.AWS_KEY }}
         run: |
           echo "variable: $SUPER_SECRET"
+          echo "${{ github.event.inputs.myenv }}"
       
   Build-UAT:
     if: github.event_name != 'pull_request' && ( needs.UnitTest-UAT.result == 'success' || github.ref == 'refs/heads/release' ) || ( needs.UnitTest.result == 'success' || github.ref == 'refs/heads/main' )
