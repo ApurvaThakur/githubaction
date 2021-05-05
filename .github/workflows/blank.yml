@@ -48,8 +48,8 @@ jobs:
     if: github.ref == 'refs/heads/release'  || github.base_ref == 'release'
     name: Unit Test Only -UAT
     runs-on: ubuntu-latest
-    #environment: 
-      #name: ${{ github.event.inputs.myenv.default }}
+    environment: 
+      name: ${{ github.event.inputs.myenv }}
     steps:
       - run: echo "Ref :$GITHUB_REF"
       - run: echo "$GITHUB_BASE_REF"
