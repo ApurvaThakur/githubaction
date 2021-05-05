@@ -41,7 +41,7 @@ jobs:
         env:  
           name: ${{ secrets.AWS_KEY }}"
         run: echo "Name_key:$name"
-        if: $ {{ matrix.github.ref }} == github.ref
+        if: ${{ matrix.build_type == 'refs/heads/release' }}
   Build-UAT:
     if: github.event_name != 'pull_request' && ( needs.UnitTest-UAT.result == 'success' || github.ref == 'refs/heads/release' ) || ( needs.UnitTest.result == 'success' || github.ref == 'refs/heads/main' )
     needs: some_job
