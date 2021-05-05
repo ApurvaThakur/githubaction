@@ -34,7 +34,11 @@ jobs:
     steps:
       - run: echo "Ref :$GITHUB_REF"
       - run: echo "$GITHUB_BASE_REF"
-      - run: echo "${{ secrets.TEST }}"
+      - shell: bash
+        env:
+          SUPER_SECRET: ${{ secrets.TEST }}
+        run: |
+            example-command "$SUPER_SECRET"
       - name: checkout
         uses: actions/checkout@v2
       
