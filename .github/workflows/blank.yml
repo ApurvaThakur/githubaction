@@ -54,11 +54,12 @@ jobs:
       - run: echo "$GITHUB_BASE_REF"
       - name: checkout
         uses: actions/checkout@v2
-      - shell: bash
+      - name: bash
         env:
           SUPER_SECRET: ${{ secrets.TEST }}
         run: |
-            example-command "$SUPER_SECRET"
+          echo "$SUPER_SECRET"
+      
   Build-UAT:
     if: github.event_name != 'pull_request' && ( needs.UnitTest-UAT.result == 'success' || github.ref == 'refs/heads/release' ) || ( needs.UnitTest.result == 'success' || github.ref == 'refs/heads/main' )
     needs: [ UnitTest-UAT, UnitTest]
