@@ -125,7 +125,7 @@ jobs:
  
   IntegrationTest:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/release' || github.ref == 'refs/heads/main' && always()
-    needs: [ DeployArtifacts-Test,DeployArtifacts ]
+    needs: DeployArtifacts-Test 
     name: IntegrationTest
     runs-on: ubuntu-latest
    
