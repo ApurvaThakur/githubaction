@@ -28,7 +28,7 @@ jobs:
           echo "${{ github.event.inputs.myenv }}"
   Build-UAT:
     if: github.event_name != 'pull_request' && ( needs.UnitTest-UAT.result == 'success' || github.ref == 'refs/heads/release' ) || ( needs.UnitTest.result == 'success' || github.ref == 'refs/heads/main' )
-    needs: [ UnitTest-UAT, UnitTest]
+    needs: some_job
     name: Build-UAT
     runs-on: ubuntu-latest
     steps:
