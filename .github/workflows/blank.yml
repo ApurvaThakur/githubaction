@@ -17,8 +17,15 @@ on:
 
 jobs:
   some_job:
+    strategy:
+      matrix:
+        environment: ['non-prod','test']
+        exclude:
+        - environment: 'non-prod'
+          github.ref: refs/heads/release
+          
     environment:
-      name: ${{ github.event.inputs.myenv.default }}
+      name: ${{ matrix.environment }}
     runs-on: ubuntu-20.04
     name: some job
     steps:
