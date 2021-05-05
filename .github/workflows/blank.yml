@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       envName: 
-        default: 'dev'
+        default: 'test'
         required: true
   push:
     branches: 
