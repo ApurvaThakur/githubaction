@@ -22,7 +22,7 @@ jobs:
       matrix:
         environment: ['non-prod','test']
         #githubbranch: [1]
-        github.ref: [github.ref]
+        github.ref: ['refs/heads/release','refs/heads/main']
         exclude:
         - environment: 'non-prod'
           github.ref: 'refs/heads/release'
@@ -41,7 +41,7 @@ jobs:
         env:  
           name: ${{ secrets.AWS_KEY }}"
         run: echo "Name_key:$name"
-        if: ${{ matrix.build_type == 'refs/heads/release' }}
+        if: ${{ matrix.github.ref == 'refs/heads/release' }}
   Build-UAT:
     if: github.event_name != 'pull_request' && ( needs.UnitTest-UAT.result == 'success' || github.ref == 'refs/heads/release' ) || ( needs.UnitTest.result == 'success' || github.ref == 'refs/heads/main' )
     needs: some_job
