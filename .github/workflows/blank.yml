@@ -35,11 +35,11 @@ jobs:
         #environment: ['non-prod']
         #githubbranch: [1]
         github.ref: [ '${{needs.job1.outputs.output1}}']
-        include:
+        exclude:
         - github.ref: 'release'
-          environment: 'test'
-        - github.ref: 'main'
           environment: 'non-prod'
+        - github.ref: 'main'
+          environment: 'test'
           
           
     environment:
