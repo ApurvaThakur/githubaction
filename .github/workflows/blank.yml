@@ -36,7 +36,7 @@ jobs:
       matrix:
         environment: ['non-prod','test']
         #githubbranch: [1]
-        github.ref: [needs.matrix_prep.outputs.matrix]
+        github.ref: ${{needs.matrix_prep.outputs.branchName}}
         exclude:
         - environment: 'non-prod'
           github.ref: 'refs/heads/release'
@@ -49,8 +49,8 @@ jobs:
     runs-on: ubuntu-20.04
     name: some job
     steps:
-      - name: say hi
-        run: echo hi
+      
+      - run: echo ${{needs.matrix_prep.outputs.branchName}}
       - run: |
             branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g') 
             echo $branchName
