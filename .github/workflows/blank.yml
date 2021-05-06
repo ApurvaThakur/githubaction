@@ -60,7 +60,7 @@ jobs:
     environment:
       name: ${{ matrix.environment }}
     runs-on: ubuntu-20.04
-    name: somejob-${{ matrix.environment }} 
+    name: somejob-${{  github.ref }} 
     steps:
       
       - run: echo ${{needs.job1.outputs.output1}}
