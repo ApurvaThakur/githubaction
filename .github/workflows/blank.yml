@@ -100,7 +100,7 @@ jobs:
     
   # job to get count of Critical/High vulnerabilities associated with this repo
   Fortifyanalysis:
-    if: needs.Fortify-SAST.result == 'success'
+    if: needs.Fortify-SAST.result == 'success' && ${{ always() }}
     needs: Fortify-SAST # this setting makes this job dependent on build completing successfully
  
     runs-on: ubuntu-latest
@@ -114,8 +114,8 @@ jobs:
       
 
   DeployArtifacts-Test:
-    if: needs.Fortifyanalysis.result == 'success' 
-    needs: Fortifyanalysis
+    #if: needs.Fortifyanalysis.result == 'success' 
+    needs: [ Fortifyanalysis,Build-UAT,Fortify-SAST ]
     runs-on: ubuntu-latest
    # environment: TEST
     steps:
