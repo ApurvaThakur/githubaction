@@ -88,16 +88,8 @@ jobs:
     if: ${{ success() }}
     needs: Build-UAT
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        environment: [ '${{needs.job1.outputs.output1}}','${{needs.job1.outputs.output2}}','${{needs.job1.outputs.output3}}','${{needs.job1.outputs.output4}}']
-        exclude:
-          - environment: ''
-    outputs:
-        output1: ${{ env.JOB_TOKEN }} # try outputting job token to use in additional jobs
-    environment:
-      name: ${{ matrix.environment }}
-    name: Fortify-${{ matrix.environment }}
+    
+    name: Fortify-Scan
     steps:
     - uses: actions/checkout@v1
     - name: Run PowerShell Get Critical/High Count script
