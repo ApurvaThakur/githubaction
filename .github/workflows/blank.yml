@@ -26,8 +26,9 @@ jobs:
     - id: set-matrix
       run: |
         branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g') 
-        echo $branchName               
-        echo "::set-output name=branchName::$(echo $branchName)"
+        echo $branchName
+        echo "::set-output name=branchName::$branchName"
+      
     - run: echo $branchName
   some_job:
     if: github.ref == 'refs/heads/release' 
