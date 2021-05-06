@@ -30,10 +30,10 @@ jobs:
           echo $branchName
       - id : step2
         run: echo "::set-output name=test::release"
-        if: contains('$(echo $branchName)', 'release') 
+        if: " contains('$(echo $branchName)', 'release') "
       - id : step3
         run: echo "::set-output name=test::main"
-        if: contains('$(echo $branchName)', 'main') 
+        if: " contains('$(echo $branchName)', 'main') "
     
   some_job:
     if: github.ref == 'refs/heads/release' 
