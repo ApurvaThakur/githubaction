@@ -29,6 +29,7 @@ jobs:
         - environment: 'test'
           github.ref: 'refs/heads/main'
           
+          
     environment:
       name: ${{ matrix.environment }}
     runs-on: ubuntu-20.04
@@ -36,7 +37,9 @@ jobs:
     steps:
       - name: say hi
         run: echo hi
-  
+      - run: |
+            branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g') 
+            echo $branchName
       - name: show env
         env:  
           name: ${{ secrets.AWS_KEY }}"
