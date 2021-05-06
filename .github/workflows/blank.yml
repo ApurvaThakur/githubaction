@@ -100,7 +100,7 @@ jobs:
     
   # job to get count of Critical/High vulnerabilities associated with this repo
   Fortifyanalysis:
-    #if: needs.Fortify-SAST.result == 'success' && ${{ success() }}
+    if: ${{ success() }}
     needs: Fortify-SAST # this setting makes this job dependent on build completing successfully
  
     runs-on: ubuntu-latest
