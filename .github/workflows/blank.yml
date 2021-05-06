@@ -59,7 +59,7 @@ jobs:
     environment:
       name: ${{ matrix.environment }}
     runs-on: ubuntu-20.04
-    name: some job
+    name: somejob-${{ matrix.environment }}
     steps:
       
       - run: echo ${{needs.job1.outputs.output1}}
