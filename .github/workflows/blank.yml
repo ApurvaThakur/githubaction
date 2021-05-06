@@ -47,7 +47,7 @@ jobs:
     
   some_job:
     if: github.ref == 'refs/heads/release' 
-    name: UnitTest-'${{needs.job1.outputs.output1}}'
+    #name: UnitTest-'${{needs.job1.outputs.output1}}'
     needs: job1
     strategy:
       matrix:
@@ -60,7 +60,7 @@ jobs:
     environment:
       name: ${{ matrix.environment }}
     runs-on: ubuntu-20.04
-    name: some job
+    name: somejob-${{ matrix.environment }} 
     steps:
       
       - run: echo ${{needs.job1.outputs.output1}}
