@@ -27,7 +27,7 @@ jobs:
       run: |
         branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g') 
         echo $branchName               
-        echo ::set-output name=branchName::{\"include\":$(echo $branchName)}\"
+        echo ::echo "::set-output name=branchName::$branchName"
     - run: echo $branchName
   some_job:
     if: github.ref == 'refs/heads/release' 
