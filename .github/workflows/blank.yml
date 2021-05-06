@@ -73,7 +73,7 @@ jobs:
       - run: echo "${{ matrix.github.ref }} "
       #== 'refs/heads/release' }}
   Build-UAT:
-    if: github.event_name == 'pull_request'
+    if: github.event_name != 'pull_request'
     needs: some_job
     name: Build-UAT
     runs-on: ubuntu-latest
@@ -84,7 +84,7 @@ jobs:
       - run: tree
 
   Fortify-SAST:
-    if: ${{ always() }}
+    if: ${{ success() }}
     needs: Build-UAT
     runs-on: ubuntu-latest
      
