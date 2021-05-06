@@ -32,9 +32,9 @@ jobs:
     needs: job1
     strategy:
       matrix:
-        #environment: ['non-prod','test']
+        environment: ['non-prod']
         #githubbranch: [1]
-        github.ref: ${{needs.matrix_prep.outputs.output1}}
+        #github.ref: ${{needs.matrix_prep.outputs.output1}}
         include:
         - github.ref: 'release'
           environment: 'test'
