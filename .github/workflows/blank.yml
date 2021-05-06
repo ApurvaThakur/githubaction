@@ -34,7 +34,7 @@ jobs:
       matrix:
         #environment: ['non-prod']
         #githubbranch: [1]
-        github.ref: ${{needs.job1.outputs.output1}}
+        github.ref: [ '${{needs.job1.outputs.output1}}']
         include:
         - github.ref: 'release'
           environment: 'test'
