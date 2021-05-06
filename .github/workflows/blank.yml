@@ -16,29 +16,25 @@ on:
     
 
 jobs:
-  matrix_prep:
+  job1:
     runs-on: ubuntu-latest
+    # Map a step output to a job output
     outputs:
-      output: ${{ steps.set-matrix.outputs.test }}
+      output1: ${{ steps.step1.outputs.test }}
+      output2: ${{ steps.step2.outputs.test }}
     steps:
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v2
-    - id: set-matrix
-      run: |
-        branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g') 
-        echo $branchName
-        echo "::set-output name=test::hello"
-    #echo "::set-output name=branchName::$branchName"
-      
-    - run: echo $branchName
+      - id: step1
+        run: echo "::set-output name=test::release"
+      - id: step2
+        run: echo "::set-output name=test::world"
   some_job:
     if: github.ref == 'refs/heads/release' 
-    needs: matrix_prep
+    needs: job1
     strategy:
       matrix:
-        environment: ['non-prod','test']
+        #environment: ['non-prod','test']
         #githubbranch: [1]
-        #github.ref: ${{needs.matrix_prep.outputs.branchName}}
+        github.ref: ${{needs.matrix_prep.outputs.output1}}
         include:
         - github.ref: 'release'
           environment: 'test'
@@ -52,7 +48,7 @@ jobs:
     name: some job
     steps:
       
-      - run: echo ${{needs.matrix_prep.outputs.test}}
+      - run: echo ${{needs.matrix_prep.outputs.output1}}
       - run: |
             branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g') 
             echo $branchName
