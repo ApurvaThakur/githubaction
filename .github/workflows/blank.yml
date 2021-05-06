@@ -84,7 +84,7 @@ jobs:
       - run: tree
 
   Fortify-SAST:
-  
+    if: always()
     needs: Build-UAT
     runs-on: ubuntu-latest
      
