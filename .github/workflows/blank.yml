@@ -19,7 +19,7 @@ jobs:
   matrix_prep:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.branchName }}
+      output: ${{ steps.set-matrix.outputs.test }}
     steps:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
@@ -27,7 +27,8 @@ jobs:
       run: |
         branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g') 
         echo $branchName
-        echo "::set-output name=branchName::$branchName"
+        echo "::set-output name=test::hello"
+    #echo "::set-output name=branchName::$branchName"
       
     - run: echo $branchName
   some_job:
@@ -51,7 +52,7 @@ jobs:
     name: some job
     steps:
       
-      - run: echo ${{needs.matrix_prep.outputs.branchName}}
+      - run: echo ${{needs.matrix_prep.outputs.test}}
       - run: |
             branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g') 
             echo $branchName
