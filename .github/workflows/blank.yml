@@ -28,19 +28,19 @@ jobs:
         run: branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g')
       - id : step2
         run: echo "::set-output name=test::release"
-        if: contains('$branchName', 'release') 
+        if: contains('$branchName', 'release') returns release
       - id : step3
         run: echo "::set-output name=test::main"
-        if: contains('$branchName', 'main') 
+        if: contains('$branchName', 'main') returns main
     
   some_job:
     if: github.ref == 'refs/heads/release' 
     needs: job1
     strategy:
       matrix:
-        #environment: ['non-prod']
+        environment: ['release']
         #githubbranch: [1]
-        environment: [ '${{needs.job1.outputs.output1}}','${{needs.job1.outputs.output1}}']
+        #environment: [ '${{needs.job1.outputs.output1}}','${{needs.job1.outputs.output2}}']
       
           
           
