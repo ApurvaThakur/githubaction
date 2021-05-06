@@ -29,11 +29,13 @@ jobs:
           branchName=$(echo '${{ github.ref }}')
           echo $branchName
       - id : step2
+        name: For Push event,Setup environment as release
         run: echo "::set-output name=test::release"
-        if: contains(github.ref, 'release')
+        if: contains(github.ref, 'release') && github.event_name != 'pull_request'
       - id : step3
+        name: For Push event,Setup environment as main
         run: echo "::set-output name=test::main"
-        if: contains(github.ref, 'main')
+        if: contains(github.ref, 'main') && github.event_name != 'pull_request' 
     
   some_job:
     if: github.ref == 'refs/heads/release' 
