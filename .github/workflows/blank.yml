@@ -34,9 +34,9 @@ jobs:
     needs: matrix_prep
     strategy:
       matrix:
-        #environment: ['non-prod','test']
+        environment: ['non-prod','test']
         #githubbranch: [1]
-        github.ref: ${{needs.matrix_prep.outputs.branchName}}
+        #github.ref: ${{needs.matrix_prep.outputs.branchName}}
         include:
         - github.ref: 'release'
           environment: 'test'
