@@ -85,7 +85,7 @@ jobs:
 
   Fortify-SAST:
     if: ${{ success() }}
-    needs: [ Build-UAT,job1 ]
+    needs: ${{ matrix.environment }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
