@@ -113,7 +113,7 @@ jobs:
       
 
   DeployArtifacts-Test:
-    if: needs.Fortify-SAST.result == 'success'  && always()
+    if: needs.FortifyanalysisT.result == 'success'  && always()
     needs: [ Build-UAT,some_job,Fortify-SAST,job1,Fortifyanalysis]
     runs-on: ubuntu-latest
    # environment: TEST
