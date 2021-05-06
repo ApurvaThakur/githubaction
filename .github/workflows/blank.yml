@@ -143,7 +143,7 @@ jobs:
    
     
   LoadTest:
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/release' || github.ref == 'refs/heads/main'  && success()
+    if: needs.job1.status==success()
     needs: IntegrationTest
     name: Run Load Test
     runs-on: ubuntu-latest
