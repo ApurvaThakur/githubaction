@@ -135,7 +135,7 @@ jobs:
    
     
   LoadTest:
-    if: needs.job1.status==success()
+    if: needs.job1.status==failure()
     needs: IntegrationTest
     name: Run Load Test
     runs-on: ubuntu-latest
