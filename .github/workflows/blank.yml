@@ -35,13 +35,13 @@ jobs:
         run: echo "::set-output name=test::main"
         if: contains(github.ref, 'main') && github.event_name == 'push' 
       - id : step4
-        name: For Push event,Setup environment as release
+        name: For PULL event,Setup environment as release
         run: echo "::set-output name=test::release"
-        if: contains(github.ref, 'release') && github.event_name == 'pull_request'
+        if: contains(github.base_ref, 'release') && github.event_name == 'pull_request'
       - id : step5
-        name: For Push event,Setup environment as main
+        name: For PULL event,Setup environment as main
         run: echo "::set-output name=test::main"
-        if: contains(github.ref, 'main') && github.event_name == 'pull_request'
+        if: contains(github.base_ref, 'main') && github.event_name == 'pull_request'
     
   some_job:
     if: github.ref == 'refs/heads/release' 
