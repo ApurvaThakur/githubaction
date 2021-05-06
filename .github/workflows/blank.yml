@@ -48,7 +48,7 @@ jobs:
     name: some job
     steps:
       
-      - run: echo ${{needs.matrix_prep.outputs.output1}}
+      - run: echo ${{needs.job1.outputs.output1}}
       - run: |
             branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g') 
             echo $branchName
