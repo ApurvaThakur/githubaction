@@ -115,11 +115,12 @@ jobs:
   DeployArtifacts-Test:
     #if: (github.event_name != 'pull_request') && (github.ref == 'refs/heads/release' && needs.Fortifyanalysis.result == 'success')  &&((needs.Build-UAT.result == 'success') && always())
    # if: needs.Fortifyanalysis.result == 'success'
-    needs: [ Build-UAT,some_job,Fortify-SAST,job1]
+    needs: [ Build-UAT,some_job,Fortify-SAST,job1,Fortifyanalysis]
     runs-on: ubuntu-latest
    # environment: TEST
     steps:
     - uses: actions/checkout@v2
+    - run: echo ${{needs.Fortifyanalysis.result}}
     - run: echo "this job is not completed yet" 
  
   IntegrationTest:
