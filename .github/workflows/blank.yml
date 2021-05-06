@@ -121,7 +121,7 @@ jobs:
       
 
   DeployArtifacts-Test:
-    if: ${{ success() }} 
+    if: always()
     needs: [ Build-UAT,some_job,Fortify-SAST,job1,Fortifyanalysis]
     runs-on: ubuntu-latest
    # environment: TEST
