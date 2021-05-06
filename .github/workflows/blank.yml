@@ -13,7 +13,8 @@ on:
     branches:
     - main
     - release
-    
+env:
+    DependentJob: some_job
 
 jobs:
   job1:
@@ -85,7 +86,7 @@ jobs:
 
   Fortify-SAST:
     if: ${{ success() }}
-    needs: ${{ matrix.environment }}
+    needs: '${{ env.DependentJob }}'
     runs-on: ubuntu-latest
     strategy:
       matrix:
