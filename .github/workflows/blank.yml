@@ -25,7 +25,9 @@ jobs:
     
     steps:
       - id: step1
-        run: branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g')
+        run: |
+          branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g')
+          echo $branchName
       - id : step2
         run: echo "::set-output name=test::release"
         if: contains('$branchName', 'release') 
