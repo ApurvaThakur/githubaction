@@ -17,6 +17,7 @@ on:
 
 jobs:
   job1:
+    name: Setup Environment
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
@@ -24,18 +25,23 @@ jobs:
       output2: ${{ steps.step3.outputs.test }}
     
     steps:
-      - id: step1
-        run: |
-          branchName=$(echo '${{ github.ref }}')
-          echo $branchName
+    
       - id : step2
         name: For Push event,Setup environment as release
         run: echo "::set-output name=test::release"
-        if: contains(github.ref, 'release') && github.event_name != 'pull_request'
+        if: contains(github.ref, 'release') && github.event_name == 'push'
       - id : step3
         name: For Push event,Setup environment as main
         run: echo "::set-output name=test::main"
-        if: contains(github.ref, 'main') && github.event_name != 'pull_request' 
+        if: contains(github.ref, 'main') && github.event_name == 'push' 
+      - id : step4
+        name: For Push event,Setup environment as release
+        run: echo "::set-output name=test::release"
+        if: contains(github.ref, 'release') && github.event_name == 'pull_request'
+      - id : step5
+        name: For Push event,Setup environment as main
+        run: echo "::set-output name=test::main"
+        if: contains(github.ref, 'main') && github.event_name == 'pull_request'
     
   some_job:
     if: github.ref == 'refs/heads/release' 
