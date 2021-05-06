@@ -113,8 +113,8 @@ jobs:
       
 
   DeployArtifacts-Test:
-    #if: (github.event_name != 'pull_request') && (github.ref == 'refs/heads/main' && needs.FortifyanalysisT.result == 'success')  ||  (needs.FortifyanalysisT.Build-UAT == 'success') && always()
-    if: (needs.Build-UAT == 'success') && always()
+    #if: (github.event_name != 'pull_request') && (github.ref == 'refs/heads/main' && needs.Fortifyanalysis.result == 'success')  ||  (needs.FortifyanalysisT.Build-UAT == 'success') && always()
+    if: (needs.Build-UAT.result == 'success') && always()
     needs: [ Build-UAT,some_job,Fortify-SAST,job1,Fortifyanalysis]
     runs-on: ubuntu-latest
    # environment: TEST
