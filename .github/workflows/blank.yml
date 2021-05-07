@@ -74,7 +74,7 @@ jobs:
       - run: echo "${{ matrix.github.ref }} "
       #== 'refs/heads/release' }}
   Build-UAT:
-    if: github.event_name == 'pull_request'
+    if: github.event_name != 'pull_request'
     needs: some_job
     name: Build-UAT
     runs-on: ubuntu-latest
@@ -114,7 +114,7 @@ jobs:
       
 
   DeployArtifacts-Test:
-    if:  (github.ref == 'refs/heads/release' && needs.Fortifyanalysis.result == 'success') || (github.ref != 'refs/heads/release' && github.event_name != 'pull_request' && needs.Build-UAT.result == 'success' && always())
+    if:  (github.ref == 'refs/heads/main' && needs.Fortifyanalysis.result == 'success') || (github.ref != 'refs/heads/main' && github.event_name != 'pull_request' && needs.Build-UAT.result == 'success' && always())
    # if: needs.Fortifyanalysis.result == 'success'
     needs: [ Build-UAT,some_job,Fortify-SAST,job1,Fortifyanalysis]
     runs-on: ubuntu-latest
