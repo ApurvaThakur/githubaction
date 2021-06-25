@@ -33,6 +33,7 @@ jobs:
         run: echo Hello, worldd
       - run: echo ${{ steps.checkout.outputs.exit_code }}
       - run: echo ${{ job.build.steps.checkout.status }}
+      - run: echo ${{ job.steps.checkout.status }}
   test:
     if: github.base_ref == 'refs/heads/main' || github.ref == 'refs/heads/main'
     needs: build
