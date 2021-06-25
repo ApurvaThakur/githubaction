@@ -32,7 +32,7 @@ jobs:
         id: checkout
         run: echo Hello, worldd
         
-      - run: echo job.status.checkout.status
+      - run: echo ${{ job.status.checkout.status }}
   test:
     if: github.base_ref == 'refs/heads/main' || github.ref == 'refs/heads/main'
     needs: build
