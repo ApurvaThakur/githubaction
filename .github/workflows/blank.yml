@@ -31,7 +31,7 @@ jobs:
       - name: Run a one-line script
         id: checkout
         run: echo Hello, worldd
-      - run: echo ${{ steps.checkout.outputs.exit_code }}
+      - run: echo ${{ steps.checkout.outcome }}
       - run: echo ${{ job.build.steps.checkout.status }}
       - run: echo ${{ job.steps.checkout.status }}
   test:
