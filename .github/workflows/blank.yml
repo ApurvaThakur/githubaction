@@ -33,7 +33,7 @@ jobs:
         run: ls -la>New.json
       - run: cat New.json
       - name: switching from HTTPS to SSH
-        run: git remote set-url origin ${{ secrets.ssh }}
+        run: git remote set-url origin git@github.com:ApurvaThakur/githubaction.git
       - name: check for changes
         run: git status
       - name: stage changed files
