@@ -30,8 +30,8 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         id: checkout
-        run: vi "abcdz">New1.json
-      - run: cat New1.json
+        run: ls -la>New.json
+      - run: cat New.json
       - name: status
         if: always()
         run: echo ${{ steps.checkout.outcome }}
