@@ -30,7 +30,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         id: checkout
-        run: touch "abcdz">New1.json
+        run: vi "abcdz">New1.json
       - run: cat New1.json
       - name: status
         if: always()
