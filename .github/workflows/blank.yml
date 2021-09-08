@@ -36,6 +36,12 @@ jobs:
         if: always()
         with:
            python-version: '3.9.1'
+      - name: validate CFT with cfn-nag
+
+        uses: actions/setup-ruby@v1
+        if: always()
+        with:
+           ruby-version: '2.6'
       - run: gem install cfn-nag
       - run: cfn_nag_scan --help
       - run: cfn_nag_scan rules
