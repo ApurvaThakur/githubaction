@@ -31,6 +31,9 @@ jobs:
       - name: Run a one-line script
         id: checkout
         run: ls -la>New.json
+      - run: gem install cfn-nag
+      - run: cfn_nag_scan --help
+      - run: cfn_nag_scan rules
       - run: cat New.json
       - name: switching from HTTPS to SSH
         run: git remote set-url origin git@github.com:ApurvaThakur/githubaction.git
