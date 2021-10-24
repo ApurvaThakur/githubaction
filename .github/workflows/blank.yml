@@ -1,29 +1,122 @@
-# This is a basic workflow to help you get started with Actions
+name: github-actions-java
 
-name: CI
 
-# Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
+  workflow_dispatch:
+    inputs:
+      myenv:
+        description: 'the env to run on'
+        default: 'dev'
+        #: 'test'
+        required: true
   push:
-    branches: 
+    branches:
     - main
-  pull_request:
-    branches: 
-    - main
-    - master
     - release
+env:
+    DependentJob: some_job
 
- 
- 
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  job1:
+    name: Setup Environment
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    # Map a step output to a job output
+    outputs:
+      output1: ${{ steps.step2.outputs.test }}
+      output2: ${{ steps.step3.outputs.test }}
+    
     steps:
+    
+      - id : step2
+        name: For Push event,Setup environment as release
+        run: echo "::set-output name=test::release"
+        if: contains(github.ref, 'release') && github.event_name == 'push'
+      - id : step3
+        name: For Push event,Setup environment as main
+        run: echo "::set-output name=test::main"
+        if: contains(github.ref, 'main') && github.event_name == 'push' 
+      - id : step4
+        name: For PULL event,Setup environment as release
+        run: echo "::set-output name=test::release"
+        if: contains(github.base_ref, 'release') && github.event_name == 'pull_request'
+      - id : step5
+        name: For PULL event,Setup environment as main
+        run: echo "::set-output name=test::main"
+        if: contains(github.base_ref, 'main') && github.event_name == 'pull_request'
+    
+  some_job:
+    if: github.ref == 'refs/heads/release' 
+    needs: job1
+    strategy:
+      matrix:
+        #environment: ['release','main']
+        #githubbranch: [1]
+        environment: [ '${{needs.job1.outputs.output1}}','${{needs.job1.outputs.output2}}','${{needs.job1.outputs.output3}}','${{needs.job1.outputs.output4}}']
+        exclude:
+          - environment: ''
+          
+          
+          
+    environment:
+      name: ${{ matrix.environment }}
+    runs-on: ubuntu-20.04
+    name: somejob-${{ matrix.environment }}
+    steps:
+      
+      - run: echo ${{needs.job1.outputs.output1}}
+      - run: |
+            branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g') 
+            echo $branchName
+      - name: show env
+        env:  
+          name: ${{ secrets.KEY }}"
+        run: echo "Name_key:$name"
+      - run: echo "${{ matrix.github.ref }} "
+      #== 'refs/heads/release' }}
+  Build-UAT:
+    if: github.event_name != 'pull_request'
+    needs: some_job
+    name: Build-UAT
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - run: pwd
+      - run: tree
+      - run: exit -1
+
+  Fortify-SAST:
+    if: ${{ success() }}
+    needs: Build-UAT
+    runs-on: ubuntu-latest
+    
+    name: Fortify-Scan
+    steps:
+    - uses: actions/checkout@v1
+    - name: Run PowerShell Get Critical/High Count script
+      run: |
+        ls
+          
+    
+  # job to get count of Critical/High vulnerabilities associated with this repo
+  Fortifyanalysis:
+    if: github.ref == 'refs/heads/release'
+    needs: Fortify-SAST # this setting makes this job dependent on build completing successfully
+ 
+    runs-on: ubuntu-latest
+     
+    steps:
+    - uses: actions/checkout@v1
+    - name: Run PowerShell Get Critical/High Count script
+      run: |
+        ls
+ 
+      
+
+  DeployArtifacts-Test:
+    if:  (github.ref == 'refs/heads/release' && needs.Fortifyanalysis.result == 'success') || (github.ref != 'refs/heads/release' && github.event_name != 'pull_request' && needs.Build-UAT.result == 'success' && always())
+   # if: needs.Fortifyanalysis.result == 'success'
+    needs: [ Build-UAT,some_job,Fortify-SAST,job1,Fortifyanalysis]
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       
@@ -66,7 +159,16 @@ jobs:
     if: github.base_ref == 'refs/heads/main' || github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
+   # environment: TEST
     steps:
+    - uses: actions/checkout@v2
+    - run: echo ${{needs.Fortifyanalysis.result}}
+    - run: echo "this job is not completed yet" 
+ 
+  IntegrationTest:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/release' || github.ref == 'refs/heads/main'
+    needs: DeployArtifacts-Test 
+    name: IntegrationTest
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
@@ -78,7 +180,18 @@ jobs:
     if: github.base_ref == 'refs/heads/release' || github.ref == 'refs/heads/release'
     needs: build
     runs-on: ubuntu-latest
+   
+    
     steps:
+    - uses: actions/checkout@v2
+    - run: echo "this job is not completed yet" 
+ 
+   
+    
+  LoadTest:
+    if: needs.job1.status==failure()
+    needs: IntegrationTest
+    name: Run Load Test
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
@@ -88,9 +201,7 @@ jobs:
     if: success()
     needs: [ build , test ]
     runs-on: ubuntu-latest
+    
     steps:
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+    - name: Load test status - Jmeter
+      run: echo "This Job would get updated soon"
