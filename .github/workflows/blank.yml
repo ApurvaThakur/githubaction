@@ -117,6 +117,47 @@ jobs:
     if:  (github.ref == 'refs/heads/release' && needs.Fortifyanalysis.result == 'success') || (github.ref != 'refs/heads/release' && github.event_name != 'pull_request' && needs.Build-UAT.result == 'success' && always())
    # if: needs.Fortifyanalysis.result == 'success'
     needs: [ Build-UAT,some_job,Fortify-SAST,job1,Fortifyanalysis]
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        id: checkout
+        run: ls -la>New.json
+      - name: validate CFT with cfn- lint
+        uses: actions/setup-python@v2
+        if: always()
+        with:
+           python-version: '3.9.1'
+      - name: validate CFT with cfn-nag
+
+        uses: actions/setup-ruby@v1
+        if: always()
+        with:
+           ruby-version: '2.6'
+      - run: gem install cfn-nag
+      - run: cfn_nag_scan --help
+      - run: cfn_nag_scan rules
+      - run: cat New.json
+      - name: switching from HTTPS to SSH
+        run: git remote set-url origin git@github.com:ApurvaThakur/githubaction.git
+      - name: check for changes
+        run: git status
+      - name: stage changed files
+        run: git add .
+      - name: commit changed files
+        run: git commit -m "Auto updating TODO.txt"
+      - name: fetch from master
+        run: git push origin main
+     
+    
+      - name: status
+        if: always()
+        run: echo ${{ steps.checkout.outcome }}
+      
+  test:
+    if: github.base_ref == 'refs/heads/main' || github.ref == 'refs/heads/main'
+    needs: build
     runs-on: ubuntu-latest
    # environment: TEST
     steps:
@@ -128,6 +169,16 @@ jobs:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/release' || github.ref == 'refs/heads/main'
     needs: DeployArtifacts-Test 
     name: IntegrationTest
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+       # exit 1
+  test-2:
+  
+    if: github.base_ref == 'refs/heads/release' || github.ref == 'refs/heads/release'
+    needs: build
     runs-on: ubuntu-latest
    
     
@@ -141,6 +192,14 @@ jobs:
     if: needs.job1.status==failure()
     needs: IntegrationTest
     name: Run Load Test
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+  deploy:
+    if: success()
+    needs: [ build , test ]
     runs-on: ubuntu-latest
     
     steps:
